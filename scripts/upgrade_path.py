@@ -17,12 +17,12 @@ LANGUAGE = {
 }
 DEPTH = {"rails": 2, "laravel": 1, "django": 2}
 LOCK_PATTERNS = {
-    "Gemfile.lock": ("rails", r"^\s+rails \((\d+(?:\.\d+)+)\)"),
+    "Gemfile.lock": ("rails", r"^\s+rails \((\d+(?:\.\d+)+)[\w.]*\)"),
     "composer.lock": ("laravel", r'"name":\s*"laravel/framework",\s*"version":\s*"v?(\d+(?:\.\d+)+)"'),
     "poetry.lock": ("django", r'name = "django"\s+version = "(\d+(?:\.\d+)+)"'),
     "uv.lock": ("django", r'name = "django"\s+version = "(\d+(?:\.\d+)+)"'),
 }
-REQUIREMENTS = ("django", r"^django==(\d+(?:\.\d+)+)")
+REQUIREMENTS = ("django", r"^django(?:\[[^\]]*\])?\s*(?:==|>=|~=)\s*(\d+(?:\.\d+)+)")
 SECRET_NAMES = ("database.yml", "database.php", "settings.py")
 
 

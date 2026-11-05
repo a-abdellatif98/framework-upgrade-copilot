@@ -57,6 +57,9 @@ def test_series_match_reference_hops():
         ("composer.lock", '{"packages":[{"name": "laravel/framework",\n "version": "v11.44.2"}]}', ("laravel", "11.44.2")),
         ("poetry.lock", '[[package]]\nname = "django"\nversion = "5.0.6"\n', ("django", "5.0.6")),
         ("requirements-dev.txt", "pytest==8\nDjango==4.2.11\n", ("django", "4.2.11")),
+        ("requirements.txt", "Django>=4.2,<5\n", ("django", "4.2")),
+        ("requirements.txt", "django[argon2] == 4.2.1\n", ("django", "4.2.1")),
+        ("Gemfile.lock", "GEM\n  specs:\n    rails (8.0.0.rc1)\n", ("rails", "8.0.0")),
     ],
 )
 def test_read_lockfile(tmp_path, name, content, expected):
@@ -103,3 +106,12 @@ def test_cli_reports_errors_without_traceback():
 def test_cli_requires_one_source():
     assert run("--target", "8.1").returncode == 2
     assert run("--framework", "rails", "--target", "8.1").returncode == 2
+
+
+def test_language_values_appear_in_references():
+    root = SCRIPT.parent.parent / "skills" / "plan-upgrade" / "references"
+    for framework, (_, versions) in upgrade_path.LANGUAGE.items():
+        text = (root / f"{framework}.md").read_text()
+        for series, value in versions.items():
+            floor = value.removesuffix("+").split(" to ")[0]
+            assert floor in text, (framework, series, value)
