@@ -61,3 +61,9 @@ def test_no_root_claude_md():
 def test_docs_have_no_em_or_en_dashes():
     for path in DOCS:
         assert "\u2014" not in path.read_text() and "\u2013" not in path.read_text(), path.name
+
+
+def test_docs_name_no_credential_identifiers():
+    pattern = re.compile(r"\$?\w*(?:auth)?password\w*name\w*|\$\{?\w*(?:password|token|secret|api_?key)\w*\}?", re.IGNORECASE)
+    for path in DOCS:
+        assert not pattern.search(path.read_text()), path

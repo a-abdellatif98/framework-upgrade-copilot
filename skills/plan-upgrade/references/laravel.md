@@ -56,11 +56,11 @@ Medium impact:
 - Rate limiting is per second: `Limit`, `GlobalLimit`, `ThrottlesExceptions` and `ThrottlesExceptionsWithRedis` take seconds, and `Limit::$decayMinutes` became `decaySeconds`.
 
 Low impact:
-- Passwords are rehashed on login when the work factor changes. Set `protected $authPasswordName` if the column is not `password`, or `'rehash_on_login' => false` in `config/hashing.php`.
+- Passwords are rehashed on login when the work factor changes. If the hash column has another name, declare it on the user model (see "Password Rehashing" in the 11.x upgrade guide), or set `'rehash_on_login' => false` in `config/hashing.php`.
 - Doctrine DBAL methods removed, including `Connection::getDoctrineConnection()`, `getDoctrineSchemaManager()`, `getDoctrineColumn()`, `registerDoctrineType()`, and `Schema\Builder::useNativeSchemaOperationsIfPossible()`. Use `Schema::getTables()`, `getColumns()`, `getIndexes()`, `getForeignKeys()`.
 - Spatial column types `point`, `lineString`, `polygon`, `geometryCollection`, `multiPoint`, `multiLineString`, `multiPolygon`, `multiPolygonZ` were removed; use `geometry` or `geography`.
 - The base model defines a `casts()` method, so a relationship named `casts` conflicts.
-- `UserProvider` contract gains `rehashPasswordIfRequired`; `Authenticatable` gains `getAuthPasswordName()`.
+- `UserProvider` contract gains `rehashPasswordIfRequired`; `Authenticatable` gains a method returning the hash column name. Custom implementations must add both.
 
 Very low impact:
 - `Schema::getAllTables()`, `getAllViews()`, `getAllTypes()` removed (use `getTables()`, `getViews()`, `getTypes()`).
