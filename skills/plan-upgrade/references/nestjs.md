@@ -66,7 +66,7 @@ Breaking:
 - Termination hooks (`OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`) run in the reverse of initialization order.
 - Middleware registered by global modules runs first.
 - `@nestjs/cache-manager` moves to Keyv: the `store` option becomes `stores` (for example `new KeyvRedis(...)` from `@keyv/redis`), and cached data is stored as `{ value, expires }`.
-- `@nestjs/config` 4.0.0: `ConfigService#get` lookup order changed (internal config before environment variables), `ignoreEnvVars` is deprecated in favor of `validatePredefined`, and `skipProcessEnv` is new.
+- `@nestjs/config` 4.0.0: the lookup order of `ConfigService#get` changed and some module options were renamed. Read the `@nestjs/config` section of the migration guide before upgrading.
 - Terminus: `HealthIndicatorService` is the new API; `HealthIndicator` and `HealthCheckError` are deprecated.
 
 Search patterns:
@@ -75,7 +75,7 @@ Search patterns:
 - `enableCors(` and fastify `cors` options
 - `getAllAndMerge`, `getAllAndOverride`
 - `store:` in `CacheModule.register`
-- `ConfigService` use with `ignoreEnvVars`
+- `ConfigModule.forRoot(` options
 - `HealthIndicator`, `HealthCheckError`
 
 Data and rollout risk: cached values written by the old store are not read in the new `{ value, expires }` shape, so values written by the old store may not be readable. Plan for a cold cache after deploy and flush or version the keys on purpose (verify the behavior for your cache backend).
