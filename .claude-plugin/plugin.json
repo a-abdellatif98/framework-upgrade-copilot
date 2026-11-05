@@ -1,0 +1,21 @@
+{
+  "name": "framework-upgrade-copilot",
+  "description": "Plans and guides major framework upgrades one hop at a time for Rails (6.1 to 8.1), Laravel (10 to 13) and Django (4.2 LTS to 6.0): detects versions from lock files, lists breaking changes, removed APIs, config defaults, language minimums and a test-gated checklist per hop, with sources from the official upgrade guides",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ahmed",
+    "email": "ahmed.abdelatife@gmail.com"
+  },
+  "icon": "assets/icon.svg",
+  "homepage": "https://github.com/a-abdellatif98/framework-upgrade-copilot",
+  "repository": "https://github.com/a-abdellatif98/framework-upgrade-copilot",
+  "license": "MIT",
+  "keywords": [
+    "deprecations",
+    "django",
+    "laravel",
+    "migration",
+    "rails",
+    "upgrade"
+  ]
+}
