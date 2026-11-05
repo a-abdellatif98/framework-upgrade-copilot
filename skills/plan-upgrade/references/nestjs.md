@@ -60,7 +60,7 @@ Node.js: 20 or higher.
 Breaking:
 - Express 5 is the default in `@nestjs/platform-express`. Wildcards must be named (`/*splat` or `/{*splat}`, not `/*`), `?` optional syntax is unsupported (use braces, for example `/:file{.:ext}`), regexp characters are unsupported, and the characters `(()[]?+!)` are reserved and need `\` escaping.
 - Query parsing: with Express 5 the `simple` parser is the default. Restore nested parsing with `app.set('query parser', 'extended')`.
-- Fastify 5 in `@nestjs/platform-fastify`: Fastify 5 breaking changes apply. CORS allows only CORS-safelisted methods by default; pass `methods` to `enableCors` for `PUT`, `PATCH` or `DELETE`. Middleware paths use the new path-to-regexp, so `(.*)` is unsupported; use `*splat`.
+- Fastify 5 in `@nestjs/platform-fastify`: Fastify 5 breaking changes apply. CORS allows only CORS-safelisted methods by default; list `methods` in the `enableCors` options for `PUT`, `PATCH` or `DELETE`. Middleware paths use the new path-to-regexp, so `(.*)` is unsupported; use `*splat`.
 - Dynamic modules are no longer deduplicated by a generated hash; object references decide equivalence. This affects tests that select dynamic modules (guide options: `moduleIdGeneratorAlgorithm: 'deep-hash'`, `module.select(ParentModule).get(Target)`, `module.get(Target, { each: true })`).
 - `Reflector`: `getAllAndMerge` returns an object instead of a one-element array for single object metadata, and `getAllAndOverride` returns `T | undefined`.
 - Termination hooks (`OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`) run in the reverse of initialization order.
