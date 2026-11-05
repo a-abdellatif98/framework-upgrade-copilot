@@ -46,6 +46,6 @@ Treat the argument as a framework and target version (for example `rails 8.1`, `
 
 **Blocked by:** dependencies with no release supporting the target, and anything marked "verify" in the reference.
 
-**Hop helper:** `python3 scripts/upgrade_path.py --lockfile Gemfile.lock --target 8.1` (run from the plugin directory) prints the hop list and language minimums.
+**Hop helper (for the user to run, not you):** `python3 scripts/upgrade_path.py --lockfile Gemfile.lock --target 8.1` (run from the plugin directory) prints the hop list and language minimums.
 
 Do not run anything. Produce the plan, commands and hits only.
