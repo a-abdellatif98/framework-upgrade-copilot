@@ -65,8 +65,8 @@ Breaking:
 - `Reflector`: `getAllAndMerge` returns an object instead of a one-element array for single object metadata, and `getAllAndOverride` returns `T | undefined`.
 - Termination hooks (`OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`) run in the reverse of initialization order.
 - Middleware registered by global modules runs first.
-- `@nestjs/cache-manager` moves to Keyv: the `store` option becomes `stores` (for example `new KeyvRedis(...)` from `@keyv/redis`), and cached data is stored as `{ value, expires }`.
-- `@nestjs/config` 4.0.0: the lookup order of `ConfigService#get` changed and some module options were renamed. Read the `@nestjs/config` section of the migration guide before upgrading.
+- `@nestjs/cache-manager`: the `store` option becomes `stores` and takes a list of store adapters, and cached data is stored as `{ value, expires }`.
+- `@nestjs/config` 4.0.0 has breaking changes. Read its section of the migration guide before upgrading.
 - Terminus: `HealthIndicatorService` is the new API; `HealthIndicator` and `HealthCheckError` are deprecated.
 
 Search patterns:
@@ -75,10 +75,9 @@ Search patterns:
 - `enableCors(` and fastify `cors` options
 - `getAllAndMerge`, `getAllAndOverride`
 - `store:` in `CacheModule.register`
-- `ConfigModule.forRoot(` options
 - `HealthIndicator`, `HealthCheckError`
 
-Data and rollout risk: cached values written by the old store are not read in the new `{ value, expires }` shape, so values written by the old store may not be readable. Plan for a cold cache after deploy and flush or version the keys on purpose (verify the behavior for your cache backend).
+Data and rollout risk: cached values written by the old store are not read in the new `{ value, expires }` shape, so values written by the old store may not be readable. Plan for a cold cache after deploy and flush or version the cache on purpose (verify the behavior for your cache backend).
 
 ## Hop: NestJS 11 -> 12
 
@@ -90,7 +89,7 @@ Breaking or required:
 - Core packages ship as ESM. CommonJS apps consume them through `require(esm)`; migrating your own code to ESM is not required (verify against your toolchain).
 - NATS transport moves to v3: replace `nats` with `@nats-io/transport-node` (and `@nats-io/nats-core` for helpers). `StringCodec` and `JSONCodec` are removed, and custom deserializers receive the full message object (read the payload with `msg.json()`).
 - GraphQL: `subscriptions-transport-ws` is removed; use `subscriptions: { 'graphql-ws': true }`. GraphiQL is the default IDE and takes a `graphiql` options object instead of `graphiql: true`.
-- `@nestjs/config`: `validationSchema` accepts Standard Schema, Joi schemas need Joi 18+, and Joi-specific `validationOptions` move under `validationOptions.libraryOptions`.
+- `@nestjs/config`: schema validation changed (Standard Schema support, Joi 18+). Check its section of the migration guide.
 - Terminus: legacy `HealthIndicator` and `HealthCheckError` are removed; use `HealthIndicatorService`. The `timeout` option on database, microservice and gRPC indicators is deprecated in favor of `.withTimeout()`.
 - Lifecycle hooks (`onModuleInit`, `onApplicationBootstrap`, shutdown hooks) run by component hierarchy level, so execution order can change.
 - `@Optional()` is not inherited by a redeclared constructor; Nest throws `UnknownDependenciesException` where 11 returned `undefined`. Redeclare the marker.
