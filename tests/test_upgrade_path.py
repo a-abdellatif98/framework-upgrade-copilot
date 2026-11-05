@@ -183,3 +183,40 @@ def test_language_values_appear_in_references():
         for series, value in versions.items():
             floor = value.removesuffix("+").split(" to ")[0]
             assert floor in text, (framework, series, value)
+
+
+@pytest.mark.parametrize(
+    "name,content",
+    [
+        ("pnpm-lock.yaml", "packages:\n  /next@12.0.0:\n    resolution: {}\n  /next@14.0.0:\n    resolution: {}\n"),
+        ("yarn.lock", 'next@^12.0.0:\n  version "12.0.0"\n\nnext@^14.0.0:\n  version "14.0.0"\n'),
+        ("package-lock.json", '{"dependencies": {"x": {"version": "1.0.0", "dependencies": {"next": {"version": "12.0.0"}}}, "next": {"version": "14.0.0"}}}'),
+    ],
+)
+def test_read_lockfile_refuses_several_versions(tmp_path, name, content):
+    path = tmp_path / name
+    path.write_text(content)
+    with pytest.raises(ValueError, match="several nextjs versions"):
+        upgrade_path.read_lockfile(path)
+
+
+@pytest.mark.parametrize(
+    "name,content,framework",
+    [
+        ("pnpm-lock.yaml", "packages:\n  next-auth@4.0.0(next@14.0.0):\n    resolution: {}\n", "nextjs"),
+        ("yarn.lock", '"@nestjs/core-x@^1.0.0":\n  version "1.0.0"\n', "nestjs"),
+        ("package-lock.json", '{"packages": {"node_modules/x/node_modules/next": {"version": "12.0.0"}}}', "nextjs"),
+    ],
+)
+def test_read_lockfile_ignores_lookalikes(tmp_path, name, content, framework):
+    path = tmp_path / name
+    path.write_text(content)
+    with pytest.raises(ValueError, match="no .* version found"):
+        upgrade_path.read_lockfile(path)
+
+
+def test_cli_reports_bare_major(tmp_path):
+    path = tmp_path / "requirements.txt"
+    path.write_text("Django>=5\n")
+    result = run("--lockfile", str(path), "--target", "6.0")
+    assert result.returncode == 2 and "bare major" in result.stderr

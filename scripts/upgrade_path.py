@@ -54,7 +54,7 @@ def upgrade_path(framework, current, target):
     start, end = normalize(framework, current), normalize(framework, target)
     for value in (start, end):
         if value not in series and any(item.startswith(f"{value}.") for item in series):
-            raise ValueError(f"{framework} {value} is a bare major; give the minor version, e.g. {value}.0")
+            raise ValueError(f"{framework} {value} is a bare major; give the exact minor version, e.g. {value}.2")
         if value not in series:
             raise ValueError(f"{framework} {value} is not covered; supported: {', '.join(series)}")
     first, last = series.index(start), series.index(end)
@@ -81,9 +81,11 @@ def read_lockfile(path, framework=None):
     text = path.read_text()
     found = []
     for candidate, pattern in candidates:
-        match = re.search(pattern, text, re.MULTILINE | re.IGNORECASE)
-        if match:
-            found.append((candidate, match.group(1)))
+        versions = sorted(set(re.findall(pattern, text, re.MULTILINE | re.IGNORECASE)))
+        if len(versions) > 1:
+            raise ValueError(f"{name} holds several {candidate} versions ({' and '.join(versions)}); pass --framework with --current")
+        if versions:
+            found.append((candidate, versions[0]))
     if not found:
         raise ValueError(f"no {' or '.join(item[0] for item in candidates)} version found in {name}")
     if len(found) > 1:
