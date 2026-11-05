@@ -23,7 +23,7 @@ From https://docs.djangoproject.com/en/5.2/howto/upgrade-version/:
 
 | Django | Python |
 |---|---|
-| 4.2 LTS | 3.8 to 3.12 (3.12 as of 4.2.8); last series to support 3.8 and 3.9 |
+| 4.2 LTS | 3.8 to 3.12 (verify: 3.12 as of 4.2.8 not confirmed); last series to support 3.8 and 3.9 |
 | 5.0 | 3.10, 3.11, 3.12 |
 | 5.1 | 3.10 to 3.13 (3.13 as of 5.1.3) |
 | 5.2 LTS | 3.10 to 3.14 (3.14 as of 5.2.8) |

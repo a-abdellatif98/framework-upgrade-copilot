@@ -19,7 +19,7 @@ Treat the argument as a framework and target version (for example `rails 8.1`, `
 1. **Detect the framework and current version** with Glob and Read:
    - Rails: `Gemfile.lock` (`rails (X.Y.Z)`), `.ruby-version`, `config/application.rb` (`config.load_defaults`), `config/initializers/new_framework_defaults_*.rb`
    - Laravel: `composer.lock` (`laravel/framework`), `composer.json`, `bootstrap/app.php` or `app/Http/Kernel.php`
-   - Django: `poetry.lock`, `uv.lock`, `Pipfile.lock`, `requirements*.txt` or `pyproject.toml`, `.python-version`
+   - Django: `poetry.lock`, `uv.lock`, `requirements*.txt` or `pyproject.toml`, `.python-version`
 
    Never open `.env`, `.env.*`, `config/database.yml`, `settings.py` `DATABASES`, `config/database.php`, credential files, or anything holding tokens or database URLs.
 
