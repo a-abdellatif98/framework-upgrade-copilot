@@ -5,7 +5,7 @@ Facts below come from the official NestJS migration guides (current page for 11 
 ## Detecting versions
 
 - NestJS: in order, `package-lock.json` (`node_modules/@nestjs/core` then `version`), `pnpm-lock.yaml` (`@nestjs/core@X.Y.Z`), `yarn.lock` (`"@nestjs/core@...":` then `version`), then `package.json`. Lock files only; `scripts/upgrade_path.py --lockfile` reads the first three. `@nestjs/core` is the version that defines the major.
-- Companion packages move on their own versions (`@nestjs/config`, `@nestjs/cache-manager`, `@nestjs/terminus`, `@nestjs/swagger`, `@nestjs/graphql`, `@nestjs/schematics`, `@nestjs/cli`). Read each one's version in the same lock file.
+- Companion packages move on their own versions (`@nestjs/cache-manager`, `@nestjs/terminus`, `@nestjs/swagger`, `@nestjs/graphql`, `@nestjs/schematics`, `@nestjs/cli`). Read each one's version in the same lock file.
 - HTTP adapter: `@nestjs/platform-express` or `@nestjs/platform-fastify`. The adapter decides which breaking changes apply.
 - Test runner and build: `jest` or other config in `package.json`, `nest-cli.json` (look for `webpack` options), `tsconfig*.json`.
 - Node: `.nvmrc`, `.node-version`, `.tool-versions`, `engines` in `package.json`, Dockerfile base images, CI config.
@@ -66,7 +66,7 @@ Breaking:
 - Termination hooks (`OnModuleDestroy`, `BeforeApplicationShutdown`, `OnApplicationShutdown`) run in the reverse of initialization order.
 - Middleware registered by global modules runs first.
 - `@nestjs/cache-manager`: the `store` option becomes `stores` and takes a list of store adapters, and cached data is stored as `{ value, expires }`.
-- `@nestjs/config` 4.0.0 has breaking changes. Read its section of the migration guide before upgrading.
+- Other official packages released new majors with this hop. Read each package's section of the migration guide before upgrading it.
 - Terminus: `HealthIndicatorService` is the new API; `HealthIndicator` and `HealthCheckError` are deprecated.
 
 Search patterns:
@@ -89,7 +89,6 @@ Breaking or required:
 - Core packages ship as ESM. CommonJS apps consume them through `require(esm)`; migrating your own code to ESM is not required (verify against your toolchain).
 - NATS transport moves to v3: replace `nats` with `@nats-io/transport-node` (and `@nats-io/nats-core` for helpers). `StringCodec` and `JSONCodec` are removed, and custom deserializers receive the full message object (read the payload with `msg.json()`).
 - GraphQL: `subscriptions-transport-ws` is removed; use `subscriptions: { 'graphql-ws': true }`. GraphiQL is the default IDE and takes a `graphiql` options object instead of `graphiql: true`.
-- `@nestjs/config`: schema validation changed (Standard Schema support, Joi 18+). Check its section of the migration guide.
 - Terminus: legacy `HealthIndicator` and `HealthCheckError` are removed; use `HealthIndicatorService`. The `timeout` option on database, microservice and gRPC indicators is deprecated in favor of `.withTimeout()`.
 - Lifecycle hooks (`onModuleInit`, `onApplicationBootstrap`, shutdown hooks) run by component hierarchy level, so execution order can change.
 - `@Optional()` is not inherited by a redeclared constructor; Nest throws `UnknownDependenciesException` where 11 returned `undefined`. Redeclare the marker.
@@ -102,7 +101,6 @@ Opt-in additions (not breaking): `schema` option on `@Body()`, `@Query()`, `@Par
 Search patterns:
 - `from 'nats'`, `StringCodec`, `JSONCodec`
 - `subscriptions-transport-ws`, `graphiql: true`
-- `validationSchema`, `validationOptions`
 - `HealthIndicator`, `HealthCheckError`, `timeout:` on health indicators
 - constructors that redeclare parameters of a base class that uses `@Optional()`
 - `onModuleInit`, `onApplicationBootstrap` with ordering assumptions
