@@ -220,3 +220,23 @@ def test_cli_reports_bare_major(tmp_path):
     path.write_text("Django>=5\n")
     result = run("--lockfile", str(path), "--target", "6.0")
     assert result.returncode == 2 and "bare major" in result.stderr
+
+
+def test_read_lockfile_accepts_repeated_equal_versions(tmp_path):
+    both = '{"packages": {"node_modules/next": {"version": "14.0.0"}}, "dependencies": {"next": {"version": "14.0.0"}}}'
+    cases = [
+        ("package-lock.json", both),
+        ("pnpm-lock.yaml", "packages:\n  next@14.0.0:\n    resolution: {}\nsnapshots:\n  next@14.0.0(react@18.2.0):\n    dependencies: {}\n"),
+        ("requirements.txt", "Django>=5\nDjango>=5.0\n"),
+    ]
+    for name, content in cases:
+        path = tmp_path / name
+        path.write_text(content)
+        assert upgrade_path.read_lockfile(path)[1] in ("14.0.0", "5")
+
+
+def test_read_lockfile_refuses_conflicting_requirement_pins(tmp_path):
+    path = tmp_path / "requirements.txt"
+    path.write_text('django==4.2; python_version<"3.10"\ndjango==5.0; python_version>="3.10"\n')
+    with pytest.raises(ValueError, match="several django versions"):
+        upgrade_path.read_lockfile(path)

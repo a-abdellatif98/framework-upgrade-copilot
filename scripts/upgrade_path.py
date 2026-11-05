@@ -63,6 +63,13 @@ def upgrade_path(framework, current, target):
     return list(zip(series[first:last], series[first + 1 : last + 1]))
 
 
+def comparable(version):
+    parts = [int(part) for part in version.split(".")]
+    while len(parts) > 1 and parts[-1] == 0:
+        parts.pop()
+    return tuple(parts)
+
+
 def read_lockfile(path, framework=None):
     path = Path(path)
     name = path.name
@@ -81,7 +88,10 @@ def read_lockfile(path, framework=None):
     text = path.read_text()
     found = []
     for candidate, pattern in candidates:
-        versions = sorted(set(re.findall(pattern, text, re.MULTILINE | re.IGNORECASE)))
+        distinct = {}
+        for version in re.findall(pattern, text, re.MULTILINE | re.IGNORECASE):
+            distinct.setdefault(comparable(version), version)
+        versions = sorted(distinct.values())
         if len(versions) > 1:
             raise ValueError(f"{name} holds several {candidate} versions ({' and '.join(versions)}); pass --framework with --current")
         if versions:
