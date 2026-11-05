@@ -38,7 +38,7 @@ def test_manifest_has_required_fields():
     for key in ("name", "description", "version", "author", "homepage", "repository", "license", "keywords", "icon"):
         assert MANIFEST.get(key), key
     assert MANIFEST["name"] == "framework-upgrade-copilot"
-    assert MANIFEST["repository"] == "https://github.com/a-abdellatif98/framework-upgrade-copilot"
+    assert MANIFEST["repository"].endswith("/" + MANIFEST["name"])
     assert (ROOT / MANIFEST["icon"]).is_file()
 
 

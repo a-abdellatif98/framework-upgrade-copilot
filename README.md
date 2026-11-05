@@ -53,7 +53,7 @@ python3 scripts/upgrade_path.py --framework django --current 4.2.16 --target 5.2
 python3 scripts/upgrade_path.py --lockfile pnpm-lock.yaml --framework nextjs --target 16
 ```
 
-Reads `Gemfile.lock`, `composer.lock`, `poetry.lock`, `uv.lock`, `requirements*.txt`, `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` and prints the hops with the language minimum for each. When a Node lock file holds both Next.js and NestJS, pass `--framework`. A bare major such as `Django>=5` is read as `5` and the script asks for the minor version. It refuses `.env`, `database.yml`, `database.php`, `settings.py` and npm or yarn configuration files.
+Reads `Gemfile.lock`, `composer.lock`, `poetry.lock`, `uv.lock`, `requirements*.txt`, `package-lock.json`, `pnpm-lock.yaml` or `yarn.lock` and prints the hops with the language minimum for each. When a Node lock file holds both Next.js and NestJS, pass `--framework`. A bare major such as `Django>=5` is read as `5` and the script asks for the minor version. It refuses every other file, including dotfiles and config files.
 
 ## Safety
 

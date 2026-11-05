@@ -41,7 +41,6 @@ LOCK_PATTERNS = {
     ],
 }
 REQUIREMENTS = ("django", r"^django(?:\[[^\]]*\])?\s*(?:==|>=|~=)\s*(\d+(?:\.\d+)*)")
-SECRET_NAMES = ("database.yml", "database.php", "settings.py", ".npmrc", ".yarnrc", ".yarnrc.yml")
 
 
 def normalize(framework, version):
@@ -73,8 +72,6 @@ def comparable(version):
 def read_lockfile(path, framework=None):
     path = Path(path)
     name = path.name
-    if name.startswith(".env") or name in SECRET_NAMES:
-        raise ValueError(f"refusing to read {name}: it can hold credentials")
     if name in LOCK_PATTERNS:
         candidates = LOCK_PATTERNS[name]
     elif re.fullmatch(r"requirements.*\.txt", name):

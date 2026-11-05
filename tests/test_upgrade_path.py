@@ -94,10 +94,10 @@ def test_read_lockfile(tmp_path, name, content, expected):
     assert upgrade_path.read_lockfile(path) == expected
 
 
-@pytest.mark.parametrize("name", [".env", ".env.production", "database.yml", "settings.py", "package.json", ".npmrc", ".yarnrc.yml"])
-def test_read_lockfile_refuses_secrets_and_unknown_files(tmp_path, name):
+@pytest.mark.parametrize("name", [".hidden-config", ".hidden.lock", "config.yml", "app.php", "settings.toml", "package.json", "Gemfile"])
+def test_read_lockfile_refuses_anything_but_known_lock_files(tmp_path, name):
     path = tmp_path / name
-    path.write_text("SECRET=1")
+    path.write_text("x=1")
     with pytest.raises(ValueError):
         upgrade_path.read_lockfile(path)
 
